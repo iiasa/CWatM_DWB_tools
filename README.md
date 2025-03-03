@@ -17,7 +17,7 @@ modelling system for the Danube River Basin
 [https://interreg-danube.eu/projects/danube-water-balance](https://interreg-danube.eu/projects/danube-water-balance)
 
 <p align="center">
-  <img src="figures/dwb.png" width="100" title="Danube Water Balance">
+  <img src="figures/dwb.png" width="300" title="Danube Water Balance">
 </p>
 
 The Danube River Basin (DRB) is one of the most diverse transboundary river basins of the World in the sense that 14
@@ -45,7 +45,7 @@ Community Water Model (CWatM) is a hydrological model simulating the water cycle
 CWatM is open source, and its modular structure facilitates integration with other models. CWatM will be a basis to develop next-generation global hydro-economic modelling coupled with existing IIASA models like MESSAGE and GLOBIOM.
 
 <p align="center">
-  <img src="figures/Hydrological-model2.jpg" width="200" title="CWatM">
+  <img src="figures/Hydrological-model2.jpg" width="400" title="CWatM">
 </p>
 
 ##Pre- and post processing tools to run and evaluate the hydrological model CWatM in the DWB project
