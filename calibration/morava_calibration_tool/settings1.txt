@@ -1,0 +1,80 @@
+[DEFAULT]
+Root = P:/watmodel/calibration/danube_1min
+RootLinux = /p/luc/watmodel/calibration/danube_1min
+Rootbasin = morava_calibration_tool 
+
+# start date of simulation outputs
+ForcingStart = 1/1/1990
+ForcingEnd = 31/12/2022
+timeperiod = daily
+SpinoffYears = 5
+
+# For the figures of validation, calibration, preprocessing
+MinQlength = 5
+
+[ObservedData]
+Qgis = observed_data/qgis_21thaya_02.csv
+QgisOut = observed_data/qgis_21thaya_02res.csv
+Qtss = observed_data/qtss_21thaya.csv
+
+[Path]
+Result = result
+Templates = templates       
+SubCatchmentPath = calibration1
+ParamRanges = ParamRanges3.csv
+CatchmentDataPath = staticdata
+
+[Templates]
+ModelSettings = settings_morava_1min2.ini
+RunModel = runpy.bat
+
+[MultiComputer]
+# where is CWatm (only for the batch file), CWatM is run as a library
+RunCwatm = P:/watmodel/Python3810/python P:\watmodel\calibration\danube_1min\morava_calibration_tool/run_cwatm.py
+# for calibration_main2 to trigger each single calibration 
+RunCalib = P:/watmodel/Python3810/python P:/watmodel/calibration/danube_1min/morava_calibration_tool/calibration_single2f.py
+# directory to write which computer works on what
+listPC = listPC
+
+
+[Option]
+# Sets initial parameter values according to the para_first array
+firstrun = True
+# the model runs with the best parameter set after the calibration
+bestrun = True
+# Delete runs and keep only best run
+delruns = True
+# run with sharedmemory
+sharedmem = True
+
+
+[DEAP]
+maximize = True
+
+# if more than one node is to be used for parallel processing 
+use_multiprocessing = 1
+
+# Number of nodes used for multiprocessing, recommended 1-8
+pool_limit = 64
+
+# Number of generations, recommended 10-30
+ngen = 10
+#ngen = 2
+
+# Initial population, recommended 128-256
+mu = 256
+#mu = 4
+
+# Runs per generation, recommended 8-32
+lambda_ = 32
+#lambda_ = 2
+
+# Select the best out of the generation
+select_best = 10
+#select_best = 2
+
+
+
+
+
+

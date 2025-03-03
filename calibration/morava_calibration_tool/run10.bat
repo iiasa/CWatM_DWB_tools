@@ -1,0 +1,2 @@
+python CAL_10_COMPUTE_STATS_AND_FIGURES_TIME_SERIES.py settings1.txt
+pause
