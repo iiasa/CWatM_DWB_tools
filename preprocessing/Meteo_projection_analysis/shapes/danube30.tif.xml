@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en"><Esri><CreaDate>20250506</CreaDate><CreaTime>16142000</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\users\burek\appdata\local\programs\arcgis\pro\Resources\ArcToolbox\toolboxes\Spatial Analyst Tools.tbx\Aggregate" Date="20250506" Time="161420">Aggregate danubeInt.tif P:\watmodel\CWATM\Regions\Danube_1min\Danube\meteo_projections\analysis\shapes\danube30.tif 30 MEAN EXPAND DATA</Process></lineage></DataProperties></Esri></metadata>
