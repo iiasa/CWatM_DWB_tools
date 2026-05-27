@@ -1,0 +1,8 @@
+list of files in the input folder
+> list.files("D://DWB/Tisa_csv_process/discharge_in")
+ [1] "discharge_daily_isimip3b_historical.csv"     "discharge_daily_isimip3b_wd1_ssp245.csv"    
+ [3] "discharge_daily_isimip3b_wd1_ssp585.csv"     "discharge_daily_isimip3b_wd2_ssp245.csv"    
+ [5] "discharge_daily_isimip3b_wd2_ssp585.csv"     "discharge_daily_measured.csv"               
+ [7] "discharge_daily_modelled.csv"                "discharge_daily_restore4life_historical.csv"
+ [9] "discharge_daily_restore4life_wd1_ssp245.csv" "discharge_daily_restore4life_wd1_ssp585.csv"
+[11] "discharge_daily_restore4life_wd2_ssp245.csv" "discharge_daily_restore4life_wd2_ssp585.csv"
