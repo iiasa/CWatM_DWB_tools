@@ -1,0 +1,430 @@
+/* Legend Container - rendered as a flow child inside .map-top-right-stack */
+.legend-container {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+  overflow: hidden;
+}
+
+/* Legend Header */
+.legend-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-panel);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 10%, transparent);
+}
+
+.legend-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-700);
+  flex-shrink: 0;
+}
+
+.legend-title {
+  margin: 0;
+  font-size: var(--font-size-body-emphasized);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-primary);
+}
+
+/* Legend Content - max-height set dynamically via inline style by Legend.js */
+.legend-content {
+  overflow-y: auto;
+  padding: var(--space-2);
+  scroll-snap-type: y proximity;
+}
+
+/* Custom scrollbar */
+.legend-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.legend-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.legend-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: var(--radius-sm);
+}
+
+.legend-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Legend Group */
+.legend-group {
+  margin-bottom: 0;
+  scroll-snap-align: start;
+}
+
+.legend-group + .legend-group {
+  border-top: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 10%, transparent);
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+}
+
+.legend-group-header {
+  margin-bottom: var(--space-2);
+}
+
+.legend-group-title {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-chrome);
+  padding: var(--space-1) var(--space-2);
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.legend-group-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Legend Item */
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.legend-item:hover {
+  background: var(--color-accent-50);
+}
+
+/* Ranged Legend Item */
+.legend-ranged-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  scroll-snap-align: start;
+}
+
+.legend-ranged-item + .legend-ranged-item {
+  border-top: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 10%, transparent);
+  margin-top: var(--space-1);
+  padding-top: var(--space-3);
+}
+
+.legend-ranged-item:hover {
+  background: var(--color-accent-50);
+}
+
+/* Ranges Container */
+.legend-ranges-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Custom scrollbar for ranges */
+.legend-ranges-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.legend-ranges-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.legend-ranges-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: var(--radius-sm);
+}
+
+.legend-ranges-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Individual Range Item */
+.legend-range-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.legend-range-item:hover {
+  background: var(--color-accent-50);
+}
+
+/* Range Color Box */
+.legend-range-color-box {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* Range Text */
+.legend-range-text {
+  font-size: var(--font-size-body);
+  color: var(--color-fg-secondary);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Color Box */
+.legend-color-box {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* Categorical legend (LULC): like the ranged legend but each row is a discrete
+   class swatch + name. The class list is long, so the container scrolls and the
+   labels wrap instead of being clipped. */
+.legend-categorical-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  scroll-snap-align: start;
+}
+
+.legend-categories-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.legend-categories-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.legend-categories-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.legend-categories-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: var(--radius-sm);
+}
+
+.legend-categories-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.legend-category-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+}
+
+.legend-category-item:hover {
+  background: var(--color-accent-50);
+}
+
+.legend-category-color-box {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.legend-category-label {
+  font-size: var(--font-size-body);
+  color: var(--color-fg-secondary);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.2;
+}
+
+/* Line sample for vector layers (river network): three strokes of growing
+   width to convey that line weight encodes stream order. */
+.legend-line-sample {
+  width: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.legend-line-sample > span {
+  width: 100%;
+  border-radius: 1px;
+}
+
+/* Small attribution / note under a legend item (e.g. CC-BY for HydroLAKES). */
+.legend-item-note {
+  font-size: var(--font-size-caption);
+  color: var(--color-fg-tertiary);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+/* Legend Item Content */
+.legend-item-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0; /* Allow text to truncate */
+}
+
+.legend-item-name {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fg-primary);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.legend-item-unit {
+  font-size: var(--font-size-caption);
+  color: var(--color-fg-tertiary);
+  font-weight: var(--font-weight-regular);
+  line-height: 1;
+}
+
+/* Legend Footer */
+.legend-footer {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-bg-canvas);
+  border-top: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 10%, transparent);
+}
+
+.legend-footer-text {
+  font-size: var(--font-size-caption);
+  color: var(--color-fg-tertiary);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  display: block;
+}
+
+/* Category-specific styling */
+.legend-group[data-category="inputs"] .legend-group-title {
+  color: var(--color-accent-700);
+  background: var(--color-accent-50);
+}
+
+.legend-group[data-category="outputs"] .legend-group-title {
+  color: var(--color-semantic-warning);
+  background: color-mix(in srgb, var(--color-semantic-warning) 10%, transparent);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .legend-container {
+    width: 100%;
+  }
+
+  .legend-header {
+    padding: var(--space-3) var(--space-3);
+  }
+
+  .legend-title {
+    font-size: var(--font-size-body);
+  }
+
+  .legend-content {
+    padding: var(--space-2);
+  }
+
+  .legend-group-title {
+    font-size: var(--font-size-caption);
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .legend-item {
+    padding: var(--space-2) var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .legend-color-box {
+    width: 14px;
+    height: 14px;
+  }
+
+  .legend-item-name {
+    font-size: var(--font-size-caption);
+  }
+
+  .legend-item-unit {
+    font-size: var(--font-size-caption);
+  }
+
+  .legend-footer {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .legend-footer-text {
+    font-size: var(--font-size-caption);
+  }
+
+  /* Ranged Legend Mobile Styles */
+  .legend-ranged-item {
+    padding: var(--space-2);
+    gap: var(--space-1);
+  }
+
+  .legend-ranges-container {
+    gap: var(--space-1);
+  }
+
+  .legend-range-item {
+    padding: var(--space-1) var(--space-2);
+    gap: var(--space-1);
+  }
+
+  .legend-range-color-box {
+    width: 14px;
+    height: 14px;
+  }
+
+  .legend-range-text {
+    font-size: var(--font-size-caption);
+  }
+}
+
+
+/* Hide legend when no items are visible */
+.legend-container:empty {
+  display: none;
+}
+
+/* Hover effects for better interactivity */
+.legend-item:hover .legend-color-box {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-raised);
+}
+
+.legend-item:hover .legend-item-name {
+  color: var(--color-accent-700);
+}

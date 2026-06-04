@@ -1,0 +1,368 @@
+/* Station Chart Wrapper - Similar to subbasin-charts-stack */
+.station-chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100vh;
+}
+
+.station-chart-wrapper .graph-overlay {
+  width: 100% !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.station-chart-wrapper .graph-container {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 !important;
+}
+
+.station-chart-wrapper .graph-body {
+  width: 100% !important;
+  max-height: none !important;
+  padding: var(--space-4) !important;
+}
+
+/* Custom scrollbar for station chart wrapper */
+.station-chart-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.station-chart-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: var(--radius-sm);
+}
+
+.station-chart-wrapper::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: var(--radius-sm);
+}
+
+.station-chart-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Custom styles for station discharge charts */
+.station-chart .graph-header {
+  background: var(--color-bg-panel);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 10%, transparent);
+  color: var(--color-fg-primary);
+}
+
+/* Subbasin Charts Stack - Multiple charts vertically */
+.subbasin-charts-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+  height: auto; /* Let parent control height */
+  padding: 0 0 var(--space-5) 0; /* Reduced padding */
+  overflow: visible; /* No scroll here - parent handles it */
+  max-height: none; /* Remove height restriction */
+}
+
+/* Svaki grafikon u stack-u */
+.subbasin-charts-stack > * {
+  flex-shrink: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.subbasin-charts-stack .graph-overlay {
+  width: 100% !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.subbasin-charts-stack .graph-container {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 !important;
+}
+
+.subbasin-charts-stack .graph-body {
+  width: 100% !important;
+  max-height: none !important;
+  padding: var(--space-4) !important;
+}
+
+/* Custom scrollbar za subbasin charts stack */
+.subbasin-charts-stack::-webkit-scrollbar {
+  width: 8px;
+}
+
+.subbasin-charts-stack::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: var(--radius-sm);
+}
+
+.subbasin-charts-stack::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: var(--radius-sm);
+}
+
+.subbasin-charts-stack::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Point charts stack styling */
+.point-charts-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: 100%;
+  height: 100%;
+  padding: 0 0 var(--space-5) 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Each chart in point stack */
+.point-charts-stack > * {
+  flex-shrink: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.point-charts-stack .graph-overlay {
+  width: 100% !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.point-charts-stack .graph-container {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 !important;
+}
+
+.point-charts-stack .graph-body {
+  width: 100% !important;
+  max-height: none !important;
+  margin: 0 !important;
+}
+
+.point-charts-toggle-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.point-charts-progress-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4);
+  margin: 0 0 var(--space-3) 0;
+  background: var(--color-accent-50);
+  border: 1px dashed var(--color-accent-500);
+  border-radius: var(--radius-md);
+  color: var(--color-accent-700);
+}
+
+.point-charts-processing-spinner {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--color-accent-500);
+  border-right-color: var(--color-accent-500);
+  border-bottom-color: var(--color-accent-500);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .point-charts-processing-spinner {
+    animation: pointProcessingSpin 0.8s var(--ease-standard) infinite;
+  }
+}
+
+.point-charts-progress-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.point-charts-progress-label {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent-700);
+}
+
+.point-charts-progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--color-accent-100);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.point-charts-progress-bar-fill {
+  height: 100%;
+  background: var(--color-accent-500);
+  border-radius: var(--radius-sm);
+  transition: width 0.4s ease;
+}
+
+@keyframes pointProcessingSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.point-charts-toggle {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-accent-500);
+  background: var(--color-accent-500);
+  color: #ffffff;
+  font-size: var(--font-size-body-emphasized);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard);
+  min-height: 44px;
+}
+
+.point-charts-toggle:hover {
+  background: var(--color-accent-700);
+  border-color: var(--color-accent-700);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-raised);
+}
+
+.point-charts-toggle:active {
+  transform: scale(0.97);
+  box-shadow: var(--shadow-subtle);
+  opacity: 0.9;
+}
+
+.point-charts-toggle:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling for point charts stack */
+.point-charts-stack::-webkit-scrollbar {
+  width: 8px;
+}
+
+.point-charts-stack::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: var(--radius-sm);
+}
+
+.point-charts-stack::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: var(--radius-sm);
+}
+
+.point-charts-stack::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Water Balance Pie Chart Styles */
+.water-balance-pie-chart {
+  background: var(--color-bg-panel);
+  border: 1px solid #dee2e6;
+  box-shadow: var(--shadow-raised);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.water-balance-pie-chart:hover {
+  box-shadow: var(--shadow-elevated);
+  transform: translateY(-2px);
+}
+
+.water-balance-pie-chart h3 {
+  color: var(--color-semantic-success);
+}
+
+/* Plotly chart container styling */
+.water-balance-pie-chart .js-plotly-plot {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* Custom Plotly hover styling */
+.plotly .hovertext {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  box-shadow: var(--shadow-elevated) !important;
+  border-radius: var(--radius-md) !important;
+  font-size: var(--font-size-caption) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Summary statistics styling */
+.water-balance-pie-chart .summary-stats {
+  background: var(--color-bg-panel);
+  border: 1px solid #e9ecef;
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+  box-shadow: var(--shadow-subtle);
+}
+
+.water-balance-pie-chart .stat-item {
+  text-align: center;
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.water-balance-pie-chart .stat-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.05);
+}
+
+/* Responsive design for sunburst chart */
+@media (max-width: 768px) {
+  .water-balance-pie-chart {
+    padding: var(--space-4);
+    height: 450px;
+  }
+
+  .water-balance-pie-chart h3 {
+    font-size: var(--font-size-title-sm);
+  }
+
+  .water-balance-pie-chart .summary-stats {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  
+  .water-balance-pie-chart .stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  .water-balance-pie-chart {
+    padding: var(--space-3);
+    height: 400px;
+  }
+
+  .water-balance-pie-chart .summary-stats {
+    padding: var(--space-3);
+    font-size: var(--font-size-caption);
+  }
+}

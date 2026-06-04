@@ -1,0 +1,55 @@
+# Dependencies (rebuilt in Docker)
+node_modules/
+.pnp
+.pnp.js
+
+# Build output (rebuilt in Docker)
+dist/
+build/
+
+# Environment files (secrets - never bake into image)
+.env
+.env.*
+!.env.example
+!.env.docker
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Data (mounted as volume, not baked into image)
+data/
+
+# Testing
+coverage/
+*.lcov
+
+# Logs
+logs/
+*.log
+
+# Python bytecode (rebuilt in container)
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+.venv/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files
+docker-compose*.yml
+Dockerfile
+
+# Claude / dev tooling
+.claude/
+CLAUDE.md
+
+# TypeScript incremental cache
+tsconfig.tsbuildinfo

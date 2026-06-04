@@ -1,0 +1,29 @@
+/* Single frosted plate anchored top-left over the map. Holds the funding logo
+   (top zone) and the station search (bottom zone), divided by a hairline that
+   lives on .app-logo's bottom border. The search dropdown floats below this
+   box, so no overflow clipping here. Geometry/typography reuse the shared
+   tokens so the card matches .legend-container and the old search plate. */
+.map-control-stack {
+  position: fixed;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1900;
+  width: 320px;
+  background: var(--color-bg-panel-frosted);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Replicates the old search-input "turn solid white on focus" behavior, now
+   applied to the whole card when the search input is focused. */
+.map-control-stack:focus-within {
+  background: var(--color-bg-panel);
+}
+
+@media (max-width: 768px) {
+  .map-control-stack {
+    width: calc(100% - 80px);
+    max-width: 300px;
+  }
+}

@@ -1,0 +1,30 @@
+name: dwb-cog-seed
+
+# One-time (or repeat) seeder: copies COG files from the host directory
+# (${COG_DIR_HOST:-../data/tif/cog}) into the Docker named volume `dwb-cog`
+# that TiTiler reads from at native Linux speed.
+#
+# Usage on the VM, from the dwb-backend directory:
+#
+#   docker compose --env-file .env.docker.local -f docker-compose.cog-seed.yml run --rm cog-seeder
+#
+# The container removes itself when done. Re-run whenever COG files change.
+
+services:
+  cog-seeder:
+    image: alpine:3
+    container_name: dwb-cog-seeder
+    command: >
+      sh -c "echo 'Seeding dwb-cog volume from host...' &&
+             rm -rf /dest/* &&
+             cp -a /src/. /dest/ &&
+             echo 'Done. Files in volume:' &&
+             ls /dest"
+    volumes:
+      - ${COG_DIR_HOST:-../data/tif/cog}:/src:ro
+      - dwb-cog:/dest
+
+volumes:
+  dwb-cog:
+    name: dwb-cog
+    external: true

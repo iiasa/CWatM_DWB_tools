@@ -1,0 +1,25 @@
+# Python requirements for DWB backend scripts
+# Install with: pip install -r requirements.txt
+
+# Data processing
+pandas>=2.0.0
+numpy>=1.24.0
+pyarrow>=12.0.0  # For parquet file support
+
+# NetCDF support
+xarray>=2023.1.0
+netCDF4>=1.6.0
+
+# Database
+duckdb>=0.9.0
+
+# Parallel processing with Dask (used by get_point_data.py for NetCDF I/O)
+dask>=2023.1.0
+
+# COG conversion (convert_nc_to_cog.py)
+rioxarray>=0.15.0
+rasterio>=1.3.0
+
+# Regeneration pipeline (scripts/pipeline/)
+psycopg2-binary>=2.9.0  # 00_export_subbasins_geojson.py — Postgres → GeoJSON
+geopandas>=0.14.0       # 03_subbasins_to_parquet.py — polygon zonal stats (pulls shapely + fiona)

@@ -1,0 +1,186 @@
+# ==============================================
+# Local Development — Standalone Compose
+# ==============================================
+# Usage:
+#   docker compose --env-file .env.docker.local -f docker-compose.local.yml up -d --build
+#
+# Differences from production (docker-compose.yml):
+#   - Data bind-mounted directly from host (no volume seeding needed)
+#   - Cluster mode disabled (single NestJS process for easier debugging)
+#   - Redis port exposed for debugging (redis-cli from host)
+#   - OMP_NUM_THREADS=1 (Windows bind-mount HDF5 safety)
+#   - NODE_ENV=development
+
+name: dwb-backend
+
+services:
+  # ==============================================
+  # PostGIS Database
+  # ==============================================
+  db:
+    image: postgis/postgis:17-3.5
+    # postgis/postgis publishes amd64-only; runs via Rosetta on Apple Silicon, native on Windows/Linux amd64.
+    platform: linux/amd64
+    container_name: dwb-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-DWB}
+      POSTGRES_USER: ${DATABASE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD is required}
+    ports:
+      - "${DB_HOST_PORT:-5433}:5432"
+    volumes:
+      - dwb-pgdata:/var/lib/postgresql/data
+      - ./docker/init-db:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-postgres} -d ${DATABASE_NAME:-DWB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - dwb-network
+    shm_size: 256mb
+
+  # ==============================================
+  # DWB Backend (NestJS + Python)
+  # ==============================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dwb-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      point-graph-api:
+        condition: service_healthy
+    ports:
+      - "${PORT:-8085}:8085"
+    environment:
+      NODE_ENV: development
+      PORT: 8085
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-postgres}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD is required}
+      DATABASE_NAME: ${DATABASE_NAME:-DWB}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      CACHE_TTL_SECONDS: ${CACHE_TTL_SECONDS:-2592000}
+      STATUS_TTL_SECONDS: ${STATUS_TTL_SECONDS:-86400}
+      CLUSTER_WORKERS: "1"
+      MAX_PYTHON_PROCESSES: ${MAX_PYTHON_PROCESSES:-6}
+      DASK_NUM_WORKERS: ${DASK_NUM_WORKERS:-4}
+      DATA_DIR: /app/data
+      HDF5_USE_FILE_LOCKING: "FALSE"
+      # Windows bind-mounts need serialized HDF5 access
+      OMP_NUM_THREADS: "1"
+      REDIS_URL: redis://redis:6379
+      POINT_GRAPH_API_URL: http://point-graph-api:8086
+    volumes:
+      # Bind-mount directly from host — no volume seeding needed
+      - ${DATA_DIR_HOST:?DATA_DIR_HOST is required}:/app/data:ro
+      - dwb-pycache:/app/python/cache
+    networks:
+      - dwb-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # ==============================================
+  # TiTiler (On-the-fly raster tile server)
+  # ==============================================
+  titiler:
+    build:
+      context: .
+      dockerfile: titiler/Dockerfile
+      # developmentseed/titiler base image is amd64-only.
+      platforms:
+        - linux/amd64
+    platform: linux/amd64
+    container_name: dwb-titiler
+    restart: unless-stopped
+    ports:
+      - "${TITILER_PORT:-8090}:8000"
+    environment:
+      GDAL_CACHEMAX: "1024"
+      VSI_CACHE: "TRUE"
+      VSI_CACHE_SIZE: "268435456"
+      GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+      CPL_VSIL_CURL_ALLOWED_EXTENSIONS: ".tif,.TIF,.tiff"
+      WEB_CONCURRENCY: "4"
+      TITILER_API_CORS_ORIGINS: "${TITILER_CORS_ORIGINS:-*}"
+      TITILER_API_CACHECONTROL: "public, max-age=86400"
+      DWB_COLORMAP_DIR: /opt/dwb-titiler/colormaps
+    volumes:
+      # Bind-mount COG files directly from host
+      - ${COG_DIR_HOST:-../data/tif/cog}:/data/cog:ro
+    networks:
+      - dwb-network
+
+  # ==============================================
+  # Point Graph API (FastAPI Python sidecar)
+  # ==============================================
+  point-graph-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.fastapi
+    container_name: dwb-point-graph-api
+    restart: unless-stopped
+    environment:
+      DATA_DIR: /app/data
+      HDF5_USE_FILE_LOCKING: "FALSE"
+      # Windows bind-mounts need serialized HDF5 access
+      OMP_NUM_THREADS: "1"
+      THREAD_POOL_SIZE: "4"
+    volumes:
+      # Bind-mount directly from host — no volume seeding needed
+      - ${DATA_DIR_HOST:?DATA_DIR_HOST is required}:/app/data:ro
+    networks:
+      - dwb-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  # ==============================================
+  # Redis (Shared cache for point-graph results)
+  # ==============================================
+  redis:
+    image: redis:7-alpine
+    container_name: dwb-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - dwb-redis:/data
+    networks:
+      - dwb-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  dwb-pgdata:
+    name: dwb-pgdata
+  dwb-pycache:
+    name: dwb-pycache
+  dwb-redis:
+    name: dwb-redis
+
+networks:
+  dwb-network:
+    name: dwb-network
+    driver: bridge

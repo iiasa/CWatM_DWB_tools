@@ -1,0 +1,322 @@
+/* Station Search Container — the bottom zone of the combined control card.
+   Positioning, background, and shadow come from .map-control-stack. */
+.station-search-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Input Wrapper — transparent; the card plate provides the frosted surface. */
+.station-search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Search Icon */
+.station-search-icon {
+  position: absolute;
+  left: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-fg-tertiary);
+  pointer-events: none;
+}
+
+.station-search-input-wrapper:focus-within .station-search-icon {
+  color: var(--color-accent-700);
+}
+
+/* Search Input */
+.station-search-input {
+  width: 100%;
+  padding: var(--space-3) 40px var(--space-3) 40px;
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-body-emphasized);
+  color: var(--color-fg-primary);
+  font-weight: var(--font-weight-medium);
+  outline: none;
+  border-radius: var(--radius-md);
+}
+
+.station-search-input::placeholder {
+  color: var(--color-fg-disabled);
+  font-weight: var(--font-weight-regular);
+}
+
+.station-search-input:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: -2px;
+}
+
+/* Clear Button */
+.station-search-clear {
+  position: absolute;
+  right: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-fg-disabled);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.station-search-clear:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-fg-primary);
+}
+
+.station-search-clear:active {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.station-search-clear:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+/* Dropdown Container */
+.station-search-dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .station-search-dropdown {
+    animation: slideDown 200ms var(--ease-out);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Search Results */
+.station-search-results {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: var(--space-1);
+}
+
+/* Custom scrollbar */
+.station-search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.station-search-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.station-search-results::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: var(--radius-sm);
+}
+
+.station-search-results::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Search Item — rendered as a native <button> for keyboard accessibility */
+.station-search-item {
+  /* Button reset */
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+
+  padding: var(--space-3) var(--space-3);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s ease;
+  margin-bottom: var(--space-1);
+}
+
+.station-search-item:last-child {
+  margin-bottom: 0;
+}
+
+.station-search-item:hover,
+.station-search-item.selected {
+  background: var(--color-accent-50);
+}
+
+.station-search-item:active {
+  background: var(--color-accent-100);
+}
+
+.station-search-item:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+/* Item Header */
+.station-search-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-1);
+}
+
+.station-search-item-name {
+  font-size: var(--font-size-body-emphasized);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-accent-700);
+}
+
+.station-search-item-country {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fg-tertiary);
+  padding: var(--space-1) var(--space-2);
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-md);
+}
+
+/* Item Details */
+.station-search-item-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.station-search-item-detail {
+  font-size: var(--font-size-body);
+  color: var(--color-fg-tertiary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.station-search-item-detail svg {
+  color: var(--color-accent-700);
+  flex-shrink: 0;
+}
+
+/* Footer */
+.station-search-footer {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-canvas);
+  border-top: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 10%, transparent);
+  font-size: var(--font-size-caption);
+  color: var(--color-fg-tertiary);
+  text-align: center;
+  font-weight: var(--font-weight-medium);
+}
+
+/* No Results */
+.station-search-no-results {
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+  color: var(--color-fg-disabled);
+}
+
+.station-search-no-results svg {
+  color: color-mix(in srgb, var(--color-fg-disabled) 50%, transparent);
+  margin-bottom: var(--space-3);
+}
+
+.station-search-no-results p {
+  margin: 0 0 var(--space-1) 0;
+  font-size: var(--font-size-body-emphasized);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-secondary);
+}
+
+.station-search-no-results span {
+  font-size: var(--font-size-body);
+  color: var(--color-fg-tertiary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .station-search-input {
+    padding: var(--space-3) 36px var(--space-3) 36px;
+    font-size: var(--font-size-body);
+  }
+
+  .station-search-icon {
+    left: var(--space-3);
+  }
+
+  .station-search-clear {
+    right: var(--space-3);
+  }
+
+  .station-search-results {
+    max-height: 300px;
+  }
+
+  .station-search-item {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .station-search-item-name {
+    font-size: var(--font-size-body);
+  }
+
+  .station-search-item-country {
+    font-size: var(--font-size-caption);
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .station-search-item-detail {
+    font-size: var(--font-size-caption);
+  }
+
+  .station-search-footer {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-caption);
+  }
+
+  .station-search-no-results {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .station-search-no-results svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .station-search-no-results p {
+    font-size: var(--font-size-body);
+  }
+
+  .station-search-no-results span {
+    font-size: var(--font-size-caption);
+  }
+}
+
+/* Animation for keyboard navigation */
+@keyframes highlight {
+  0% {
+    background: var(--color-accent-100);
+  }
+  100% {
+    background: var(--color-accent-50);
+  }
+}
+
