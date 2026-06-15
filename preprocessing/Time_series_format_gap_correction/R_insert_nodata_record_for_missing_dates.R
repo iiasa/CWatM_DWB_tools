@@ -5,14 +5,14 @@ library(dplyr)
 library(tidyr)
 
 # Set parameters
-file_path <- "....csv"  # Input file path
-output_path <- "....csv"  # Output file path
-separator <- ","  # Column separator
+file_path <- "C:/input.csv"  # Input file path
+output_path <- "C:/output.csv"  # Output file path
+separator <- ","  # Column separator character e.g. ";", ","
 current_date_format <- "Y-M-D"  # Current date format (e.g., "Y-M-D", "D.M.Y")
 missing_value <- -9999  # Value for missing data
 id_column <- "ID"  # Column name for station IDs
 date_column <- "Date"  # Column name for dates
-value_column <- "GWHmasl"  # Column name for data values
+value_column <- "Value"  # Column name for data values
 global_start_date <- as.Date("1990-01-01")  # Global start date for the time series
 global_end_date <- as.Date("2022-12-31")  # Global end date for the time series
 time_step <- "monthly"  # Define the type of data: "daily" or "monthly"

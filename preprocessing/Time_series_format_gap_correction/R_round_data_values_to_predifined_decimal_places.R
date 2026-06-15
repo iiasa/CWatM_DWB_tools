@@ -4,9 +4,9 @@ if (!require("tidyr")) install.packages("tidyr")
 library(dplyr)
 library(tidyr)
 
-input_file <- "....csv" # Input file path
-output_file <- "....csv" # Output file path
-delimiter <- ","  # Adjust delimiter as needed
+input_file <- "C:/input.csv"
+output_file <- "C:/output.csv"
+delimiter <- ","  # Column separator character e.g. ";", ","
 data_column_index <- 3  # Column index containing data values
 nodata_value <- -9999  # Define the NoData value
 decimal_places <- 2  # Number of decimal places for rounding

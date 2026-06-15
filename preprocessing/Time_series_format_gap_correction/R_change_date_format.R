@@ -3,9 +3,9 @@ if (!require("dplyr")) install.packages("dplyr")
 library(dplyr)
 
 # Set parameters
-input_file <- "....csv"  # Input file path
-output_file <- "....csv"  # Output file path
-separator <- ","  # Column separator character
+input_file <- "C:/input.csv"  # Input file path
+output_file <- "C:/output.csv"  # Output file path
+separator <- ","  # Column separator character e.g. ";", ","
 date_column_index <- 2  # Index of the column containing the date
 current_date_format <- "Y.M.D"  # Current (incorrect) date format
 new_date_format <- "Y-M-D"  # New (correct) date format

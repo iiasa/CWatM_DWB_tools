@@ -5,9 +5,9 @@ library(dplyr)
 library(tidyr)
 
 # Set parameters
-file_path <- "....csv"  # Input file path
-output_file <- "....txt"  # Output file path
-separator <- ","  # File separator, e.g., ";", ",", "\t", etc.
+file_path <- "C:/input.csv"  # Input file path
+output_file <- "C:/report.txt"  # Output file path
+separator <- ","  # Column separator character e.g. ";", ","
 station_column <- 1  # Column index containing station IDs
 date_column <- 2  # Column index containing dates
 data_column <- 3  # Column index containing data values

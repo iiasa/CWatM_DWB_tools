@@ -3,10 +3,10 @@ if (!require("dplyr")) install.packages("dplyr")
 library(dplyr)
 
 # Set parameters
-file_path <- "....csv"  # Input file path
-output_path <- "....csv"  # Output file path
-separator <- ","  # Column separator
-value_column <- "Qm3s"  # Column name for data values
+file_path <- "C:/input.csv"  # Input file path
+output_path <- "C:/output.csv"  # Output file path
+separator <- ","  # Column separator character e.g. ";", ","
+value_column <- "Value"  # Column name for data values
 
 # Read CSV file
 data <- read.csv(file_path, sep = separator, stringsAsFactors = FALSE)

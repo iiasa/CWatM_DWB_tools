@@ -3,9 +3,9 @@ if (!require("dplyr")) install.packages("dplyr")
 library(dplyr)
 
 # Set parameters
-input_file <- "....csv"  # Input file path
-output_file <- "....csv"  # Output file path
-separator <- ","  # Column separator
+input_file <- "C:/input.csv"  # Input file path
+output_file <- "C:/output.csv"  # Output file path
+separator <- ","  # Column separator character e.g. ";", ","
 columns_to_remove <- c(2, 3)  # Indexes of columns to be removed
 
 # Load the CSV file

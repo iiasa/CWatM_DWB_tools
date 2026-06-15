@@ -3,8 +3,8 @@ if (!require("dplyr")) install.packages("dplyr")
 library(dplyr)
 
 # Set parameters
-file_path <- "....csv"  # Input file path
-separator <- ","  # Column separator
+file_path <- "C:/input.csv"  # Input file path
+separator <- ","  # Column separator character e.g. ";", ","
 id_column <- "ID"  # Column name for station IDs
 date_column <- "Date"  # Column name for dates
 

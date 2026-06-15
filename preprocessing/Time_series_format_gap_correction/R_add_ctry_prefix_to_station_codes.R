@@ -3,9 +3,9 @@ if (!require("dplyr")) install.packages("dplyr")
 library(dplyr)
 
 # Set parameters
-input_file <- "....csv"  # Input file path
-output_file <- "....csv"  # Output file path
-prefix <- "CZ_" # Prefix to be added to each line
+input_file <- "C:/input.csv"  # Input file path
+output_file <- "C:/output.csv"  # Output file path
+prefix <- "HU_" # Prefix to be added to each line
 
 # Read the CSV file
 data <- readLines(input_file)
