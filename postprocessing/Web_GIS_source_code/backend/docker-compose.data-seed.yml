@@ -1,0 +1,54 @@
+name: dwb-data-seed
+
+# One-time (or repeat) seeder: copies the full DWB data tree
+# (Parquet, NetCDF, TIF, stations, subbasins) from the host directory
+# (${DATA_DIR_HOST:-./data}) into the Docker named volume `dwb-data` that
+# the backend reads from at native Linux speed.
+#
+# Usage on the VM, from the dwb-backend directory:
+#
+#   docker compose --env-file .env.docker.local -f docker-compose.data-seed.yml run --rm data-seeder
+#
+# The container removes itself when done. Takes ~5-10 minutes for 6 GB.
+# Re-run whenever host data changes.
+
+services:
+  data-seeder:
+    image: alpine:3
+    container_name: dwb-data-seeder
+    command: >
+      sh -c "echo 'Seeding dwb-data volume from host...' &&
+             echo 'Source contents:' &&
+             ls /src &&
+             rm -rf /dest/* &&
+             cp -a /src/. /dest/ &&
+             echo 'Done. Top-level in volume:' &&
+             ls /dest &&
+             echo 'Total size:' &&
+             du -sh /dest"
+    volumes:
+      - ${DATA_DIR_HOST:-./data}:/src:ro
+      - dwb-data:/dest
+
+  # Builds data/subbasins_consolidated/subbasins_all.parquet alongside the
+  # per-file dataset. Additive — old data/subbasins/ stays in place so the
+  # rollback path is simply unsetting SUBBASIN_PARQUET_MODE.
+  #
+  # Usage:
+  #   docker compose --env-file .env.docker.local \
+  #     -f docker-compose.data-seed.yml run --rm subbasins-parquet-builder
+  subbasins-parquet-builder:
+    image: python:3.11-slim
+    container_name: dwb-subbasins-parquet-builder
+    working_dir: /app
+    command: >
+      sh -c "pip install --no-cache-dir 'pyarrow>=12.0.0' &&
+             python /app/build_subbasins_parquet.py /data/subbasins /data/subbasins_consolidated"
+    volumes:
+      - ./python:/app:ro
+      - dwb-data:/data
+
+volumes:
+  dwb-data:
+    name: dwb-data
+    external: true

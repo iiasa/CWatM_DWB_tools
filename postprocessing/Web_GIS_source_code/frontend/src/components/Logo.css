@@ -1,0 +1,44 @@
+/* Funding lockup — the top zone of the combined control card (see
+   MapControlStack). The <a> is a transparent, full-width, centered block whose
+   bottom border is the hairline separating the logo from the search below.
+   The card plate (background / shadow / radius / fixed position) is provided by
+   .map-control-stack; this element only handles its own zone. */
+.app-logo {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 0;
+  padding: var(--space-2);
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+  /* Hairline separator between the logo and the search bar. */
+  border-bottom: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 10%, transparent);
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+/* Subtle zone tint on hover (the card itself already carries the elevated
+   shadow, so we no longer raise shadow here). */
+.app-logo:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.app-logo:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: -2px;
+}
+
+/* Span the full content width of the card so there is no empty space beside the
+   lockup; height scales with the image's natural 802:262 aspect ratio. */
+.app-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Mobile: the logo scales automatically with the card width (set in
+   MapControlStack.css), so only the padding needs tightening. */
+@media (max-width: 768px) {
+  .app-logo {
+    padding: var(--space-1);
+  }
+}

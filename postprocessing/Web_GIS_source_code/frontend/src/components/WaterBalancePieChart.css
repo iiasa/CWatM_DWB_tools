@@ -1,0 +1,84 @@
+/* Empty state shown when no dataset overlaps the selected date range. */
+.water-pie-empty {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-5);
+  background: #fff;
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
+}
+
+.water-pie-empty-title {
+  font-size: var(--font-size-body-emphasized);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.water-pie-empty-sub {
+  font-size: var(--font-size-body);
+  color: var(--color-fg-disabled);
+  max-width: 260px;
+  line-height: var(--line-height-body);
+}
+
+/* Pie chart card — header row with title + actions, then the Plotly body. */
+.pie-chart-overlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.pie-chart-overlay--fullscreen {
+  border-radius: 0;
+}
+
+.pie-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 10%, transparent);
+  flex-shrink: 0;
+}
+
+.pie-chart-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pie-chart-info h3 {
+  margin: 0;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pie-chart-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.pie-chart-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+}

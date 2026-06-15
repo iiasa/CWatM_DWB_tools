@@ -1,0 +1,192 @@
+/* Full-screen loader overlay */
+.graph-loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(3px);
+  /* Pure-opacity entrance stays even under reduced-motion — aids comprehension */
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Loader container */
+.graph-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95);
+  padding: var(--space-7) var(--space-7);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elevated);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .graph-loader-container {
+    animation: slideInUp 0.4s ease-out;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Spinner container */
+.graph-loader-spinner {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin-bottom: var(--space-5);
+}
+
+/* Rotating circle */
+.graph-loader-circle {
+  width: 100%;
+  height: 100%;
+  border: 4px solid transparent;
+  border-top-color: var(--color-accent-500);
+  border-right-color: var(--color-accent-500);
+  border-bottom-color: var(--color-accent-500);
+  border-radius: 50%;
+  animation: spin 1s var(--ease-standard) infinite;
+  position: relative;
+}
+
+/* Inner pulsing circle */
+.graph-loader-circle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: var(--color-accent-500);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+/* Spinning animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Pulsing animation for inner circle */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+/* Loading message */
+.graph-loader-message {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-title);
+  letter-spacing: var(--letter-spacing-title);
+  color: var(--color-fg-primary);
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .graph-loader-message {
+    animation: textFade 2s ease-in-out infinite;
+  }
+}
+
+@keyframes textFade {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .graph-loader-container {
+    padding: var(--space-6) var(--space-7);
+    margin: var(--space-5);
+  }
+
+  .graph-loader-spinner {
+    width: 50px;
+    height: 50px;
+    margin-bottom: var(--space-5);
+  }
+
+  .graph-loader-circle {
+    border-width: 3px;
+  }
+
+  .graph-loader-circle::before {
+    width: 16px;
+    height: 16px;
+  }
+
+  .graph-loader-message {
+    font-size: var(--font-size-title-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .graph-loader-container {
+    padding: var(--space-5) var(--space-6);
+    margin: var(--space-4);
+  }
+
+  .graph-loader-spinner {
+    width: 45px;
+    height: 45px;
+    margin-bottom: var(--space-5);
+  }
+
+  .graph-loader-circle {
+    border-width: 3px;
+  }
+
+  .graph-loader-circle::before {
+    width: 14px;
+    height: 14px;
+  }
+
+  .graph-loader-message {
+    font-size: var(--font-size-subhead);
+  }
+}

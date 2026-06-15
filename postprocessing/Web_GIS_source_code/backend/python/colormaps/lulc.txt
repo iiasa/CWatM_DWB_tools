@@ -1,0 +1,29 @@
+# CGLS-LC100 Collection 3 (v3) Discrete-Classification-map — official class colors.
+# Categorical layer: one line per discrete class value (value R G B A).
+# titiler/app.py maps [value_i, value_{i+1}) -> color_i, so each class value
+# lands at the start of its interval and renders as a solid color.
+# Class 0 (Unknown/no-data) and the dstnodata fill (255) are transparent.
+nv 0 0 0 0
+0 40 40 40 0
+20 255 187 34 255
+30 255 255 76 255
+40 240 150 255 255
+50 250 0 0 255
+60 180 180 180 255
+70 240 240 240 255
+80 0 50 200 255
+90 0 150 160 255
+100 250 230 160 255
+111 88 72 31 255
+112 0 153 0 255
+113 112 102 62 255
+114 0 204 0 255
+115 78 117 31 255
+116 0 120 0 255
+121 102 96 0 255
+122 141 180 0 255
+123 141 116 0 255
+124 160 220 0 255
+125 146 153 0 255
+126 100 140 0 255
+200 0 0 128 255

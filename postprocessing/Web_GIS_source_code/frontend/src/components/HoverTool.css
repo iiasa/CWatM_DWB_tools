@@ -1,0 +1,134 @@
+/* Hover tooltip styles */
+.hover-tooltip {
+  /* Pure-opacity reveal stays even under reduced-motion — aids comprehension */
+  animation: fadeInTooltip 0.2s ease-out;
+}
+
+.hover-tooltip-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  box-shadow: var(--shadow-elevated);
+  border: 1px solid var(--color-accent-100);
+  min-width: 100px;
+  max-width: 280px;
+  text-align: center;
+}
+
+/* Station tooltip styles */
+.hover-tooltip-station {
+  text-align: left;
+  min-width: 200px;
+}
+
+.hover-tooltip-station-name {
+  font-size: var(--font-size-body-emphasized);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-chrome);
+  color: var(--color-accent-700);
+  margin-bottom: var(--space-2);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.hover-tooltip-station-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px; /* dense data list — intentional sub-token micro-spacing */
+}
+
+.hover-tooltip-station-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hover-tooltip-label {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-accent-700);
+  margin-right: var(--space-2);
+}
+
+.hover-tooltip-value {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-fg-primary);
+  text-align: right;
+}
+
+/* Layer values styles */
+.hover-tooltip-layers {
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-accent-100);
+  text-align: left;
+}
+
+.hover-tooltip-layers-title {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-chrome);
+  color: var(--color-accent-700);
+  margin-bottom: var(--space-1);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.hover-tooltip-layer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px; /* dense data list — intentional sub-token micro-spacing */
+}
+
+.hover-tooltip-layer-name {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-secondary);
+  margin-right: var(--space-2);
+}
+
+.hover-tooltip-layer-value {
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent-700);
+}
+
+/* Animation - opacity only to avoid conflicting with positioning */
+@keyframes fadeInTooltip {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .hover-tooltip-content {
+    padding: var(--space-2) var(--space-3);
+    min-width: 70px;
+  }
+
+  .hover-tooltip-title {
+    font-size: var(--font-size-caption);
+  }
+
+  .hover-tooltip-value {
+    font-size: var(--font-size-caption);
+  }
+
+  .hover-tooltip-layers-title {
+    font-size: var(--font-size-caption);
+  }
+
+  .hover-tooltip-layer-name,
+  .hover-tooltip-layer-value {
+    font-size: var(--font-size-caption);
+  }
+}

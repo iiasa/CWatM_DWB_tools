@@ -1,0 +1,518 @@
+/* Global box-sizing */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+/* Prevent body scroll when geoportal is active */
+body.geoportal-active {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Layout */
+.geoportal-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  gap: 0;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.geoportal-container.has-chart { gap: var(--space-3); }
+
+/* Levo: mapa */
+.map-wrapper {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  transition: width var(--duration-base) var(--ease-emphasized);
+  display: flex;
+}
+
+.geoportal-container.has-chart > .map-wrapper {
+  width: 60%; /* 60% of screen width */
+  flex-shrink: 0;
+}
+
+/* Desno: panel sa grafikonima */
+.charts-panel {
+  width: calc(40% - var(--space-3)); /* Remaining width minus gap */
+  height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+  padding: var(--gutter);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-elevated);
+  border-radius: var(--radius-lg);
+  z-index: 1500;
+  box-sizing: border-box;
+  transition: width var(--duration-base) var(--ease-emphasized);
+}
+
+/* Expanded mode: swap proportions to Map 40% / Charts 60% */
+.geoportal-container.has-chart.expanded > .map-wrapper {
+  width: 40%;
+}
+
+.geoportal-container.has-chart.expanded > .charts-panel {
+  width: calc(60% - var(--space-3));
+}
+
+/* Compositor hint while the panel transition is in flight. Toggled by the
+   `animating` class on .geoportal-container (set in Geoportal.js when a
+   width/height transition starts, cleared on transitionend). Kept transient
+   so will-change doesn't permanently promote these layers. */
+.geoportal-container.animating > .map-wrapper,
+.geoportal-container.animating > .charts-panel {
+  will-change: width;
+}
+.geoportal-container.animating .subbasin-top-row {
+  will-change: height;
+}
+
+/* Honor users who have asked for reduced motion. Matches the
+   prefers-reduced-motion blocks already used in this file
+   (.selection-summary, .subbasin-loader) so the panel swap is instantaneous
+   rather than animated for those users. */
+@media (prefers-reduced-motion: reduce) {
+  .map-wrapper,
+  .charts-panel,
+  .subbasin-top-row {
+    transition: none;
+  }
+}
+
+/* Export toolbar at top of charts panel */
+.charts-panel-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) 0;
+  margin-bottom: var(--space-2);
+  flex-shrink: 0;
+}
+
+.charts-panel-toolbar-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-500);
+  color: var(--color-bg-panel);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard);
+  white-space: nowrap;
+  box-shadow: var(--shadow-raised);
+  min-height: 44px;
+}
+
+.charts-panel-toolbar-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-elevated);
+}
+
+.charts-panel-toolbar-btn:active {
+  transform: scale(0.97);
+  box-shadow: var(--shadow-subtle);
+}
+
+.charts-panel-toolbar-btn:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+.charts-panel-toolbar-btn svg {
+  flex-shrink: 0;
+}
+
+.charts-panel-toolbar-close {
+  margin-left: auto;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-raised);
+  flex-shrink: 0;
+}
+
+.charts-panel-toolbar-close:hover {
+  background: var(--color-semantic-danger);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.charts-panel-toolbar-close:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+.selection-summary {
+  width: 100%;
+  margin-bottom: var(--space-3);
+  background: var(--color-bg-panel);
+  border: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 10%, transparent);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-raised);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .selection-summary {
+    animation: slideInRight var(--duration-slow) var(--ease-out);
+  }
+}
+
+.selection-summary-header {
+  font-size: var(--font-size-body-emphasized);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-primary);
+  margin-bottom: var(--space-2);
+  letter-spacing: var(--letter-spacing-chrome);
+  text-transform: uppercase;
+}
+
+.selection-summary table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.selection-summary-label,
+.selection-summary-value {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.selection-summary-label {
+  width: 40%;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-secondary);
+}
+
+.selection-summary-value {
+  color: var(--color-fg-primary);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.selection-summary tbody tr:not(:last-child) td {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 8%, transparent);
+}
+
+/* Top row: summary table on the left, water-balance pie chart on the right.
+   Height tracks panel size — the pie chart fills its div, so a bigger row
+   means a bigger pie. Table stays compact and centered. */
+.subbasin-top-row {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  width: 100%;
+  height: clamp(240px, 32vh, 340px);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-fg-tertiary) 12%, transparent);
+  background: var(--color-bg-canvas);
+  box-sizing: border-box;
+  overflow: hidden;
+  padding-top: var(--space-3);
+  transition: height var(--duration-base) var(--ease-emphasized);
+}
+
+/* Expanded mode: cap top row at ~33% of panel height so the scrollable line
+   graphs underneath get the majority of the vertical space. */
+.geoportal-container.expanded .subbasin-top-row {
+  height: clamp(260px, 33vh, 380px);
+}
+
+.subbasin-info-col {
+  flex: 0 0 35%;
+  max-width: 35%;
+  padding: var(--space-2) var(--space-3);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Compact summary table inside subbasin top row */
+.subbasin-info-col .selection-summary {
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: 0;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-raised);
+}
+
+.subbasin-info-col .selection-summary-header {
+  font-size: var(--font-size-caption);
+  margin-bottom: var(--space-1);
+}
+
+.subbasin-info-col .selection-summary-label,
+.subbasin-info-col .selection-summary-value {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-title);
+}
+
+.subbasin-pie-col {
+  flex: 1 1 65%;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Loader za panel (subbasin) */
+.subbasin-loader {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .subbasin-loader {
+    animation: slideInRight var(--duration-slow) var(--ease-out);
+  }
+}
+
+.subbasin-loader.no-close .loader-content { padding-right: var(--space-5); }
+
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-5);
+  position: relative;
+  padding: var(--space-5);
+  padding-right: var(--space-7);
+}
+
+.loader-content-no-close { padding: var(--space-5) !important; }
+
+.loader-close-btn {
+  position: absolute;
+  top: 50%;
+  right: var(--space-4);
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+  line-height: 1;
+}
+
+.loader-close-btn:hover {
+  background: var(--color-semantic-danger);
+  color: #fff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.loader-close-btn:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid transparent;
+  border-top-color: var(--color-accent-500);
+  border-right-color: var(--color-accent-500);
+  border-bottom-color: var(--color-accent-500);
+  border-radius: 50%;
+  animation: spin 1s var(--ease-standard) infinite;
+}
+
+.loader-text {
+  font-size: var(--font-size-title-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-title);
+  color: var(--color-accent-700);
+  text-align: center;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes slideInRight { from { transform: translateX(4px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* Subbasin layout */
+.subbasin-layout-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.parquet-charts-half {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #fff;
+  padding: var(--space-3) var(--space-4);
+  box-sizing: border-box;
+}
+
+/* Scrollbar */
+.parquet-charts-half::-webkit-scrollbar { width: 8px; }
+.parquet-charts-half::-webkit-scrollbar-track { background: #f1f1f1; border-radius: var(--radius-sm); }
+.parquet-charts-half::-webkit-scrollbar-thumb { background: #888; border-radius: var(--radius-sm); }
+.parquet-charts-half::-webkit-scrollbar-thumb:hover { background: #555; }
+
+/* Responsive - medium viewport */
+@media (max-width: 1200px) {
+  .subbasin-top-row {
+    flex-direction: column;
+    height: clamp(320px, 40vh, 460px);
+    max-height: none;
+  }
+  .geoportal-container.expanded .subbasin-top-row {
+    height: clamp(440px, 55vh, 620px);
+  }
+  .subbasin-info-col {
+    flex: 0 0 auto;
+    max-width: 100%;
+  }
+  .subbasin-pie-col {
+    flex: 1 1 auto;
+    min-width: unset;
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+  }
+}
+
+/* Responsive - mobile */
+@media (max-width: 768px) {
+  .geoportal-container { 
+    padding: 0;
+    height: 100vh;
+  }
+  .geoportal-container.has-chart > .map-wrapper { 
+    width: 100%;
+    height: 50vh;
+  }
+  .charts-panel {
+    width: 100%;
+    height: 50vh;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: var(--gutter);
+    transition: height var(--duration-base) var(--ease-emphasized);
+  }
+  .charts-panel-toolbar-btn {
+    font-size: var(--font-size-caption);
+    padding: var(--space-2) var(--space-3);
+  }
+  .subbasin-top-row {
+    flex-direction: column;
+    height: auto;
+    min-height: 260px;
+    max-height: 50%;
+    padding-top: var(--space-3);
+  }
+  .subbasin-info-col {
+    flex: 0 0 auto;
+    max-width: 100%;
+  }
+  .subbasin-pie-col {
+    flex: 1 1 auto;
+    min-height: 220px;
+    min-width: unset;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Expanded mode on mobile: swap to Map 40vh / Charts 60vh */
+  .geoportal-container.has-chart.expanded > .map-wrapper {
+    height: 40vh;
+  }
+  .geoportal-container.has-chart.expanded > .charts-panel {
+    height: 60vh;
+  }
+}
+
+/* No graph message */
+.no-graph-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: var(--space-7) var(--space-5);
+  text-align: center;
+  color: var(--color-fg-tertiary);
+}
+
+.no-graph-icon {
+  margin-bottom: var(--space-5);
+  color: var(--color-fg-disabled);
+  opacity: 0.6;
+}
+
+.no-graph-icon svg {
+  stroke: currentColor;
+}
+
+.no-graph-text {
+  font-size: var(--font-size-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-title);
+  letter-spacing: var(--letter-spacing-title);
+  color: var(--color-fg-primary);
+  margin-bottom: var(--space-3);
+}
+
+.no-graph-subtext {
+  font-size: var(--font-size-body-emphasized);
+  color: var(--color-fg-tertiary);
+  max-width: 400px;
+  line-height: var(--line-height-long);
+}

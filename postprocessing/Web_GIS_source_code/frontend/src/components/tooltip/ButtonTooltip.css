@@ -1,0 +1,26 @@
+.button-tooltip {
+  position: fixed;
+  z-index: 2100;
+  pointer-events: none;
+  max-width: 220px;
+  padding: 6px 10px;
+  background: #1a1a1a; /* solid near-black */
+  color: #ffffff;
+  border-radius: var(--radius-sm, 6px);
+  box-shadow: var(--shadow-elevated, 0 8px 24px rgba(0, 0, 0, 0.25));
+  font-size: 12.5px;
+  line-height: 1.35;
+  white-space: nowrap;
+  animation: button-tooltip-fade-in 120ms ease-out;
+}
+
+@keyframes button-tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

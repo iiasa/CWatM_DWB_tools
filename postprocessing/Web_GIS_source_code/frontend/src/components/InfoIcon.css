@@ -1,0 +1,73 @@
+.info-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-pill, 999px);
+  color: var(--color-fg-disabled, #94a3b8);
+  cursor: help;
+  transition: color 0.15s ease, background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.info-icon-btn:hover,
+.info-icon-btn:focus-visible {
+  color: var(--color-accent-700, #0062cc);
+  background-color: var(--color-accent-50, #e6f1ff);
+}
+
+.info-icon-btn:focus-visible {
+  outline: 2px solid var(--color-accent-500, #007aff);
+  outline-offset: 1px;
+}
+
+.info-icon-svg {
+  display: block;
+  pointer-events: none;
+}
+
+.info-tooltip {
+  position: fixed;
+  z-index: 2100;
+  pointer-events: none;
+  max-width: 280px;
+  padding: 12px 14px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-size: 13px;
+  line-height: 1.45;
+  animation: info-tooltip-fade-in 150ms ease-out;
+}
+
+.info-tooltip-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.info-tooltip-body {
+  color: rgba(255, 255, 255, 0.92);
+  white-space: pre-wrap;
+}
+
+@keyframes info-tooltip-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

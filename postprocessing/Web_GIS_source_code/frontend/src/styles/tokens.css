@@ -1,0 +1,93 @@
+/* DWB design tokens — single source of truth for color, spacing, radius,
+   shadow, type, motion. Imported once at the top of src/index.css.
+   See DESIGN.md "## Tokens" for the source-of-truth tables. */
+
+:root {
+  /* ── Color: backgrounds ─────────────────────────────────────────── */
+  --color-bg-canvas: #fafbfc;
+  --color-bg-panel: #ffffff;
+  --color-bg-panel-frosted: rgba(255, 255, 255, 0.95);
+  --color-bg-overlay: rgba(15, 23, 42, 0.7);
+
+  /* ── Color: foreground (slate ramp, tinted toward brand-blue) ───── */
+  --color-fg-primary: #0f172a;
+  --color-fg-secondary: #475569;
+  --color-fg-tertiary: #64748b;
+  --color-fg-disabled: #94a3b8;
+
+  /* ── Color: accent (macOS System Blue, 4 stops) ─────────────────── */
+  --color-accent-50: #e6f1ff;
+  --color-accent-100: #cce3ff;
+  --color-accent-500: #007aff;
+  --color-accent-700: #0062cc;
+
+  /* ── Color: semantic ────────────────────────────────────────────── */
+  --color-semantic-success: #2da259;
+  --color-semantic-warning: #d97706;
+  --color-semantic-danger: #dc2626;
+
+  /* ── Spacing (4px base) ─────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Fluid layout tokens (relocated from Geoportal.css). */
+  --gutter: clamp(12px, 1.5vw, 22px);
+  --gap: clamp(8px, 1vw, 16px);
+
+  /* ── Radius ─────────────────────────────────────────────────────── */
+  --radius-xs: 3px;   /* swatch detail only — Legend color boxes */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* ── Shadow (Apple-system single-layer, slate-tinted) ───────────── */
+  --shadow-subtle: 0 1px 2px rgba(15, 23, 42, 0.08);
+  --shadow-raised: 0 2px 8px rgba(15, 23, 42, 0.10);
+  --shadow-elevated: 0 8px 24px rgba(15, 23, 42, 0.14);
+
+  /* ── Type: size scale (Apple System Settings flavor, fixed px) ──── */
+  --font-size-caption: 11px;
+  --font-size-body: 13px;
+  --font-size-body-emphasized: 14px;
+  --font-size-subhead: 15px;
+  --font-size-title-sm: 17px;
+  --font-size-title: 20px;
+  --font-size-title-lg: 22px;
+
+  /* ── Type: weight. Never use 700+. 300 is also out. ─────────────── */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* ── Type: line-height ──────────────────────────────────────────── */
+  --line-height-title: 1.2;
+  --line-height-body: 1.45;
+  --line-height-long: 1.6;
+
+  /* ── Type: letter-spacing ───────────────────────────────────────── */
+  --letter-spacing-title: -0.01em;
+  --letter-spacing-chrome: 0.04em;
+
+  /* ── Motion: duration ───────────────────────────────────────────── */
+  --duration-instant: 80ms;
+  --duration-fast: 160ms;
+  --duration-base: 240ms;
+  --duration-slow: 360ms;
+
+  /* ── Motion: easing ─────────────────────────────────────────────── */
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Tabular numerals utility for selectors not directly addressed via tokens. */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}

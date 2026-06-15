@@ -1,0 +1,57 @@
+.App {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+.app-loading-fallback {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: var(--font-size-title-sm);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-fg-tertiary);
+}
+
+.app-loading-fallback-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.app-loading-fallback-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid transparent;
+  border-top-color: var(--color-accent-500);
+  border-right-color: var(--color-accent-500);
+  border-bottom-color: var(--color-accent-500);
+  border-radius: 50%;
+  animation: app-loading-spin 1s var(--ease-standard) infinite;
+}
+
+@keyframes app-loading-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

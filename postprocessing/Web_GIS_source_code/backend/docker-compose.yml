@@ -1,0 +1,233 @@
+name: dwb-backend
+
+services:
+  # ==============================================
+  # PostGIS Database
+  # ==============================================
+  db:
+    image: postgis/postgis:17-3.5
+    # postgis/postgis publishes amd64-only; runs via Rosetta on Apple Silicon, native on Windows/Linux amd64.
+    platform: linux/amd64
+    container_name: dwb-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-DWB}
+      POSTGRES_USER: ${DATABASE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD is required}
+    ports:
+      # Host port 5433 to avoid conflict with local PostgreSQL on 5432
+      - "${DB_HOST_PORT:-5433}:5432"
+    volumes:
+      - dwb-pgdata:/var/lib/postgresql/data
+      - ./docker/init-db:/docker-entrypoint-initdb.d:ro
+      - ./docker/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME:-postgres} -d ${DATABASE_NAME:-DWB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - dwb-network
+    shm_size: 256mb
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 8G
+        reservations:
+          cpus: '1.0'
+          memory: 4G
+
+  # ==============================================
+  # DWB Backend (NestJS + Python)
+  # ==============================================
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dwb-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      point-graph-api:
+        condition: service_healthy
+    ports:
+      - "${PORT:-8085}:8085"
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 8085
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-postgres}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?DATABASE_PASSWORD is required}
+      DATABASE_NAME: ${DATABASE_NAME:-DWB}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      CACHE_TTL_SECONDS: ${CACHE_TTL_SECONDS:-2592000}
+      STATUS_TTL_SECONDS: ${STATUS_TTL_SECONDS:-86400}
+      CLUSTER_WORKERS: ${CLUSTER_WORKERS:-4}
+      MAX_PYTHON_PROCESSES: ${MAX_PYTHON_PROCESSES:-6}
+      DASK_NUM_WORKERS: ${DASK_NUM_WORKERS:-4}
+      DATA_DIR: /app/data
+      # HDF5 file locking must be disabled for read-only mounted NetCDF files
+      HDF5_USE_FILE_LOCKING: "FALSE"
+      # HDF5/NumPy internal threading — increased from 1 now that data is in
+      # a Docker volume (not Windows bind-mount). Benefits station/subbasin scripts.
+      OMP_NUM_THREADS: "2"
+      REDIS_URL: redis://redis:6379
+      POINT_GRAPH_API_URL: http://point-graph-api:8086
+    volumes:
+      # Full data tree (Parquet, NetCDF, TIF, stations, subbasins) in a Docker
+      # named volume for native Linux read speed. Point-graph NetCDF reads were
+      # ~10x slower on the Windows bind-mount due to HDF5 random-access I/O.
+      # Seed the volume once from the host with docker-compose.data-seed.yml.
+      - dwb-data:/app/data:ro
+      # Python cache persistence
+      - dwb-pycache:/app/python/cache
+    networks:
+      - dwb-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 4G
+        reservations:
+          cpus: '2.0'
+          memory: 2G
+
+  # ==============================================
+  # TiTiler (On-the-fly raster tile server)
+  # ==============================================
+  titiler:
+    build:
+      context: .
+      dockerfile: titiler/Dockerfile
+      # developmentseed/titiler base image is amd64-only.
+      platforms:
+        - linux/amd64
+    platform: linux/amd64
+    container_name: dwb-titiler
+    restart: unless-stopped
+    ports:
+      - "${TITILER_PORT:-8090}:8000"
+    environment:
+      # GDAL performance tuning for local COG file access.
+      # Bumped cache sizes — the VM has 32 GB RAM, previous values (200 MB / 5 MB) were tiny.
+      GDAL_CACHEMAX: "1024"
+      VSI_CACHE: "TRUE"
+      VSI_CACHE_SIZE: "268435456"
+      GDAL_DISABLE_READDIR_ON_OPEN: "EMPTY_DIR"
+      CPL_VSIL_CURL_ALLOWED_EXTENSIONS: ".tif,.TIF,.tiff"
+      # uvicorn worker count — 4 workers lets TiTiler handle parallel tile requests
+      WEB_CONCURRENCY: "4"
+      # TiTiler settings
+      TITILER_API_CORS_ORIGINS: "${TITILER_CORS_ORIGINS:-*}"
+      TITILER_API_CACHECONTROL: "public, max-age=86400"
+      # DWB colormaps
+      DWB_COLORMAP_DIR: /opt/dwb-titiler/colormaps
+    volumes:
+      # COG files in a Docker named volume for native Linux read speed.
+      # The volume root contains the per-variable subdirectories (discharge/, rain/, ...).
+      # Seed it once from host (see docker-compose.cog-seed.yml).
+      - dwb-cog:/data/cog:ro
+    networks:
+      - dwb-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+
+  # ==============================================
+  # Point Graph API (FastAPI Python sidecar)
+  # Pre-loads NetCDF datasets at startup for fast point queries.
+  # ==============================================
+  point-graph-api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.fastapi
+    container_name: dwb-point-graph-api
+    restart: unless-stopped
+    environment:
+      DATA_DIR: /app/data
+      HDF5_USE_FILE_LOCKING: "FALSE"
+      OMP_NUM_THREADS: "4"
+      THREAD_POOL_SIZE: "8"
+      WORKERS: "4"
+    volumes:
+      - dwb-data:/app/data:ro
+    networks:
+      - dwb-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8086/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 6G
+        reservations:
+          cpus: '2.0'
+          memory: 3G
+
+  # ==============================================
+  # Redis (Shared cache for point-graph results)
+  # ==============================================
+  redis:
+    image: redis:7-alpine
+    container_name: dwb-redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save "" --appendonly no
+    # No host port exposed — only accessible via dwb-network
+    volumes:
+      - dwb-redis:/data
+    networks:
+      - dwb-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+volumes:
+  dwb-pgdata:
+    name: dwb-pgdata
+  dwb-pycache:
+    name: dwb-pycache
+  dwb-cog:
+    name: dwb-cog
+  dwb-data:
+    name: dwb-data
+  dwb-redis:
+    name: dwb-redis
+
+networks:
+  dwb-network:
+    name: dwb-network
+    driver: bridge

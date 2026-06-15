@@ -1,0 +1,18 @@
+name: dwb-frontend
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dwb-frontend
+    restart: unless-stopped
+    ports:
+      - "3080:80"
+    networks:
+      - dwb-network
+
+networks:
+  dwb-network:
+    external: true
+    name: dwb-network
