@@ -1,6 +1,6 @@
 📌 This is a script which converts GeoTIFF (.tif) files to NetCDF.
 
-📦 To run the script, ensure that Python is configured on your system.
+📦 To run the script, ensure that Python is configured on your system. Required packages: numpy, rasterio, netCFD4
 
 📝 Input maps are all GeoTIFF (.tif) files.
 
