@@ -50,7 +50,69 @@ CWatM is open source, and its modular structure facilitates integration with oth
 
 ##Pre- and post processing tools to run and evaluate the hydrological model CWatM in the DWB project
 
-The repository is split into preprocessing - all scripts used for changing data to make a CWatM compatible dataset, calibration tool, river network tools, etc
+The repository is split into preprocessing - all scripts used for changing data to make a CWatM compatible dataset, calibration tool, river network tools, etc. and postprocessing tools, generating figures, timeseries from netcdf, evaluation of the model , etc.
 
-and postprocessing tools,
-generating figures, timeseries from netcdf, evaluation of the model , etc
+## Preprocessing tools
+
+All preprocessing tools are located under the `preprocessing/` directory of the repository:
+
+```text
+CWatM_DWB_tools/
+└── preprocessing/
+    ├── Compare at stations with NetCDF/      # Tool 1: Model simulations against observations
+    ├── clip_netcdf/                          # Tool 2: Spatial clipping tool
+    ├── Tool_to_correct_Morava/               # Tool 3: River routing correction
+    ├── thermalindex/                         # Tool 4: Thornthwaite Thermal Index calculator
+    ├── Meteo_projection_analysis/            # Tool 5: Meteorological data analysis
+    ├── Time_series_format_gap_correction/    # Tool 6: Data cleaning & gap analysis
+    └── tif_to_NetCDF/                        # Tool 7: GeoTIFF to NetCDF converter
+```
+
+---
+
+## Overview of preprocessing tools and their locations
+
+### 1. Compare Stations with NetCDF
+* **Description:** A Python Jupyter Notebook designed to compare observations and any number of simulation outputs.
+* **Where to find it:** `preprocessing/Compare at stations with NetCDF/`
+* **GitHub Link:** [Compare at stations with NetCDF](https://github.com/iiasa/CWatM_DWB_tools/tree/master/preprocessing/Compare%20at%20stations%20with%20NetCDF)
+
+### 2. Clip NetCDF
+* **Description:** A Python program developed to clip large-scale global or regional NetCDF datasets down to a specific sub-basin or regional modeling domain.
+* **Where to find it:** `preprocessing/clip_netcdf/`
+* **GitHub Link:** [clip_netcdf](https://github.com/iiasa/CWatM_DWB_tools/tree/master/preprocessing/clip_netcdf)
+
+### 3. River Network Correction
+* **Description:** An ArcGIS Toolbox developed to manually river routing correction.
+* **Where to find it:** `preprocessing/Tool_to_correct_Morava/`
+* **GitHub Link:** [Tool_to_correct_Morava](https://github.com/iiasa/CWatM_DWB_tools/tree/master/preprocessing/Tool_to_correct_Morava)
+
+### 4. Thermal Index for ET Calculation with Thornthwaite Method
+* **Description:** A Python-based script designed to estimate potential evaporation (PET) with Thornthwaite Method.
+* **Where to find it:** `preprocessing/thermalindex/`
+* **GitHub Link:** [thermalindex](https://github.com/iiasa/CWatM_DWB_tools/tree/master/preprocessing/thermalindex)
+
+### 5. Meteorological Data Analysis
+* **Description:** An R-based Jupyter Notebook developed to analyze and compare meteorological datasets.
+* **Where to find it:** `preprocessing/Meteo_projection_analysis/`
+* **GitHub Link:** [Meteo_projection_analysis](https://github.com/iiasa/CWatM_DWB_tools/tree/master/preprocessing/Meteo_projection_analysis)
+
+### 6. Time Series Data Format Correction and Data Gap Analysis
+* **Description:** A tool (mainly R scripts) designed to automate the cleaning, formatting, and gap assessment of highly heterogeneous station-level time series data files. The tool consists of dedicated scripts that perform the following operations:
+  * **Insert nodata records:** Automatically fills missing dates with placeholders while maintaining station order.
+  * **Remove unwanted columns:** Removes specified columns by their indices.
+  * **Change date format:** Corrects date formatting anomalies into the desired format.
+  * **Add prefix to station codes:** Adds specified prefixes to the beginning of every line.
+  * **Calculation number of data:** Computes valid data counts per station and year, saving them as a text report.
+  * **Change exponential values to normal:** Converts scientific/exponential notation into standard number formats.
+  * **Round data values:** Rounds values to desired decimal places while skipping missing records.
+  * **Remove records outside date ranges:** Filters out dates that do not fall within user-defined boundaries.
+  * **Check for duplicates:** Pinpoints duplicate records (same station ID and date) without modifying data.
+  * **Transform long format to matrix:** Transposes long-format timeseries into a wide matrix layout.
+  * **VBA Consolidate Sheets:** A VBA macro that merges all processed worksheets and pivot tables into a single "MasterSheet" to easily summarize temporal data coverage and gaps.
+* **Where to find it:** `preprocessing/Time_series_format_gap_correction/`
+* **GitHub Link:** [Time_series_format_gap_correction](https://github.com/iiasa/CWatM_DWB_tools/tree/master/preprocessing/Time_series_format_gap_correction)
+### 7. Tif to NetCDF
+* **Description:** A Python script which converts standard GeoTIFF spatial raster layers into NetCDF format.
+* **Where to find it:** `preprocessing/tif_to_NetCDF/`
+* **GitHub Link:** [tif_to_NetCDF](https://github.com/iiasa/CWatM_DWB_tools/tree/master/preprocessing/tif_to_NetCDF)
