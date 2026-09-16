@@ -1,0 +1,23 @@
+[project]
+name = "hydro-eval"
+version = "1.0.0"
+description = "Hydrological evaluation toolkit for CWatM outputs"
+requires-python = ">=3.11"
+dependencies = [
+  "matplotlib>=3.10.8",
+  "numpy>=2.2.6",
+  "pandas>=2.0",
+]
+
+[project.scripts]
+hydro-eval = "hydro_eval.cli:main"
+
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

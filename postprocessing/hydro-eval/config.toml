@@ -1,0 +1,56 @@
+# -------------------------
+# Project metadata
+# -------------------------
+[project]
+name = "morava_climate_eval"
+logging_level = "INFO"
+
+
+# -------------------------
+# Paths (relative to THIS config file)
+# -------------------------
+[paths]
+data_root = "./data"
+out_root  = "./outputs"
+
+
+# -------------------------
+# Evaluation periods
+# -------------------------
+[periods]
+baseline = ["1990-01-01", "2014-12-31"]
+future   = ["2031-01-01", "2060-12-31"]
+
+# -------------------------
+# Evaluation periods
+# -------------------------
+[comparison]
+reference_experiment = "historical"
+# target_experiments = ["ssp245", "ssp585"] # if empty or missing, will compare all experiments to reference
+
+
+# -------------------------
+# Input parameters
+# -------------------------
+[parameters]
+variable_q = "discharge_daily.csv"
+
+
+# -------------------------
+# Indicator flags
+# -------------------------
+[indicators]
+preview = false
+
+A1 = true
+A2 = true
+A3 = true
+B1 = true
+B2 = true
+B3 = true
+C1 = true
+C2 = true
+D1 = true
+
+[indicator_params.B2]
+min_event_days = 3
